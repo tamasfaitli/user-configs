@@ -1,0 +1,22 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Tamas Faitli
+
+[core]
+	editor = vim
+		
+[alias]
+	s = status
+	l = log --oneline --decorate --graph --all
+; 	dtd = difftool --dir-diff --no-symlinks
+; 	dtnp = difftool --no-prompt
+; [diff]
+; 	tool = bc
+; [merge]
+; 	tool = bc
+; [mergetool "bc"]
+; 	trustExitCode = true
+; [difftool "bc"]
+; 	trustExitCode = true
+; [init]
+; 	defaultBranch = main
