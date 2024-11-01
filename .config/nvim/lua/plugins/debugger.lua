@@ -21,26 +21,40 @@ return {
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
 
+    -- Persistent breakpoints (not to reset after reopening a vim session)
+    'Weissle/persistent-breakpoints.nvim',
     -- Add your own debuggers here
+    -- cpp debugger
     'julianolf/nvim-dap-lldb',
+    -- python debugger
+    'mfussenegger/nvim-dap-python',
   },
   keys = function(_, keys)
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local persbpapi = require 'persistent-breakpoints.api'
     return {
       -- Basic debugging keymaps, feel free to change to your liking!
       { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
       { '<F1>', dap.step_into, desc = 'Debug: Step Into' },
       { '<F2>', dap.step_over, desc = 'Debug: Step Over' },
       { '<F3>', dap.step_out, desc = 'Debug: Step Out' },
-      { '<leader>tb', dap.toggle_breakpoint, desc = 'Debug: [T]oggle [B]reakpoint' },
-      {
-        '<leader>B',
-        function()
-          dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-        end,
-        desc = 'Debug: Set Breakpoint',
+      { '<leader>tb', persbpapi.toggle_breakpoint, desc = 'Debug: [T]oggle [B]reakpoint' },
+      { '<leader>B', function()
+          persbpapi.set_conditional_breakpoint()
+        end, {desc = 'Debug: [B]reakpoint Conditional', silent=true}
       },
+      { '<leader>L', function()
+          persbpapi.set_log_point() end, {desc = 'Debug: [Log]point', silent=true}
+      },
+      -- { '<leader>tb', dap.toggle_breakpoint, desc = 'Debug: [T]oggle [B]reakpoint' },
+      -- {
+      --   '<leader>B',
+      --   function()
+      --     dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+      --   end,
+      --   desc = 'Debug: Set Breakpoint',
+      -- },
       -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
       { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
       unpack(keys),
@@ -49,6 +63,7 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local persbp = require 'persistent-breakpoints'
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
@@ -63,7 +78,7 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        'debugpy',
       },
     }
 
@@ -89,11 +104,27 @@ return {
       },
     }
 
+
+    -- persistent breakpoints settings
+    persbp.setup{
+        save_dir = vim.fn.getcwd() .. '/.nvim_checkpoints',
+        -- NOTE: In the docker setup the above one is fine but on a normal system I would not use it
+        -- save_dir = vim.fn.stdpath('data') .. '/nvim_checkpoints',
+
+        load_breakpoint_event = {"BufReadPost"},
+
+        perf_record = false,
+        on_load_breakpoint = true,
+   }
+
+
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install golang specific config
+    
+    -- Install language specific adapters
     require('dap-lldb').setup()
+    require('dap-python').setup("python3")
   end,
 }

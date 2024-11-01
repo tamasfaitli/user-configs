@@ -203,6 +203,7 @@ return {
                 -- for you, so that they are available from within Neovim.
                 local ensure_installed = vim.tbl_keys(servers or {})
                 vim.list_extend(ensure_installed, {
+                    -- NOTE: Some of these require some of these: npm, python3-pip, python3.8-venv
                     'stylua', -- Used to format Lua code
                     'bash-language-server',
                     'cpplint',

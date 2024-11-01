@@ -5,10 +5,12 @@ return{
         require('nvim-treesitter.configs').setup {
             -- A list of parser names, or "all" (the listed parsers MUST always be installed)
             ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline",
-                                "cmake", "cpp", "python", "bash", "bibtex", "cuda",
-                                "dockerfile", "doxygen", "glsl", "json", "make",
-                                "matlab", "regex", "r", "rust", "xml", "html", "yaml"},
+            "cmake", "cpp", "python", "bash", "bibtex", "cuda",
+            "dockerfile", "doxygen", "glsl", "json", "make",
+            "matlab", "regex", "r", "rust", "xml", "html", "yaml"},
 
+            ignore_install = {},
+            modules = {},
             -- Install parsers synchronously (only applied to `ensure_installed`)
             sync_install = false,
 
@@ -28,9 +30,9 @@ return{
                 -- Instead of true it can also be a list of languages
                 additional_vim_regex_highlighting = false,
             },
-    }
+        }
     end,
     dependencies = {
-      "echasnovski/mini.icons"  
+        "echasnovski/mini.icons"  
     },
 }
