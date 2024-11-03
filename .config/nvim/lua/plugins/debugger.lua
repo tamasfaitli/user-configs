@@ -1,10 +1,13 @@
 -- debug.lua
 --
--- Shows how to use the DAP plugin to debug your code.
---
--- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
+-- Current setup is good, not yet great.
+-- Ideally my UI would have windows as:
+--  - have a watch window with list of variables added
+--  - have a list of breakpoints
+--  - stack
+--  - code
+-- Furthermore, session would be stored with all variables added to the watchlist and breakpoints set
+
 
 return {
   -- NOTE: Yes, you can install new plugins here!
@@ -36,27 +39,23 @@ return {
     return {
       -- Basic debugging keymaps, feel free to change to your liking!
       { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
-      { '<F1>', dap.step_into, desc = 'Debug: Step Into' },
-      { '<F2>', dap.step_over, desc = 'Debug: Step Over' },
-      { '<F3>', dap.step_out, desc = 'Debug: Step Out' },
+      { '<F9>', dap.step_into, desc = 'Debug: Step Into' },
+      { '<F7>', dap.step_over, desc = 'Debug: Step Over' },
+      { '<F6>', dap.step_out, desc = 'Debug: Step Out' },
       { '<leader>tb', persbpapi.toggle_breakpoint, desc = 'Debug: [T]oggle [B]reakpoint' },
       { '<leader>B', function()
           persbpapi.set_conditional_breakpoint()
         end, {desc = 'Debug: [B]reakpoint Conditional', silent=true}
       },
-      { '<leader>L', function()
-          persbpapi.set_log_point() end, {desc = 'Debug: [Log]point', silent=true}
+      { '<leader>tl', function()
+          persbpapi.set_log_point() end, {desc = 'Debug: [T]oggle [L]ogpoint', silent=true}
       },
-      -- { '<leader>tb', dap.toggle_breakpoint, desc = 'Debug: [T]oggle [B]reakpoint' },
-      -- {
-      --   '<leader>B',
-      --   function()
-      --     dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-      --   end,
-      --   desc = 'Debug: Set Breakpoint',
-      -- },
+      -- NOTE: Do it twice, and it jumps into the popup window to expand structs etc..
+      {'<leader>E', function()
+        dapui.eval()
+      end, {desc= 'Debug: [E]val'}},
       -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-      { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
+      { '<F2>', dapui.toggle, desc = 'Debug: See last session result.' },
       unpack(keys),
     }
   end,
@@ -90,14 +89,16 @@ return {
       --    Don't feel like these are good choices.
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
       controls = {
+        element = "repl",
+        enabled = true,
         icons = {
           pause = '⏸',
           play = '▶',
-          step_into = '⏎',
-          step_over = '⏭',
-          step_out = '⏮',
-          step_back = 'b',
-          run_last = '▶▶',
+          step_into = '',
+          step_over = '',
+          step_out = '󰆸',
+          step_back = '',
+          run_last = '󰑙',
           terminate = '⏹',
           disconnect = '⏏',
         },
