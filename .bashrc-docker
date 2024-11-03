@@ -29,6 +29,3 @@ alias srs="source devel/setup.bash"
 alias rtl="rostopic list"
 alias rl="roslaunch"
 
-
-# TEMPORARY, currently putting together nvim config, to avoid copying back and forth
-export XDG_CONFIG_HOME="/root/dotfiles/.config"
