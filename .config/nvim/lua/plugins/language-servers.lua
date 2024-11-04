@@ -202,7 +202,7 @@ return {
                 -- You can add other tools here that you want Mason to install
                 -- for you, so that they are available from within Neovim.
                 local ensure_installed = vim.tbl_keys(servers or {})
-                vim.list_extend(ensure_installed, {
+                local mason_install = {
                     -- NOTE: Some of these require some of these: npm, python3-pip, python3.8-venv
                     'stylua', -- Used to format Lua code
                     'bash-language-server',
@@ -223,7 +223,8 @@ return {
                     'stylua',
                     'texlab',
                     'zk',
-                })
+                }
+                vim.list_extend(ensure_installed, mason_install)
                 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
                 require('mason-lspconfig').setup {
@@ -238,6 +239,11 @@ return {
                         end,
                     },
                 }
+
+                -- create custom command to be able to install everything at docker image build time
+                vim.api.nvim_create_user_command("MasonInstallAll", function ()
+                  vim.cmd("MasonInstall " .. table.concat(mason_install, " "))
+                end, {})
             end,
         },
     }

@@ -38,7 +38,10 @@ return {
     local persbpapi = require 'persistent-breakpoints.api'
     return {
       -- Basic debugging keymaps, feel free to change to your liking!
-      { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
+      { '<F12>', dap.continue, desc = 'Debug: Start/Continue' },
+      { '<F4>', function()
+          dap.disconnect({terminateDebuggee = true})
+          end, desc = 'Debug: Stop' },
       { '<F9>', dap.step_into, desc = 'Debug: Step Into' },
       { '<F7>', dap.step_over, desc = 'Debug: Step Over' },
       { '<F6>', dap.step_out, desc = 'Debug: Step Out' },
@@ -56,6 +59,13 @@ return {
       end, {desc= 'Debug: [E]val'}},
       -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
       { '<F2>', dapui.toggle, desc = 'Debug: See last session result.' },
+      -- Reading in launch config for debugging c/cpp debugging
+      { '<F3>', function()
+            if vim.fn.filereadable(".nvim/debug-launch.json") then
+                require('dap.ext.vscode').load_launchjs('.nvim/debug-launch.json', {cpptools = {"c", "cpp"}})
+            end
+        end, {desc = 'Debug: Load launch config'}
+      },
       unpack(keys),
     }
   end,
@@ -108,7 +118,7 @@ return {
 
     -- persistent breakpoints settings
     persbp.setup{
-        save_dir = vim.fn.getcwd() .. '/.nvim_checkpoints',
+        save_dir = vim.fn.getcwd() .. '/.nvim',
         -- NOTE: In the docker setup the above one is fine but on a normal system I would not use it
         -- save_dir = vim.fn.stdpath('data') .. '/nvim_checkpoints',
 
