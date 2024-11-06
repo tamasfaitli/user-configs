@@ -42,6 +42,10 @@ return {
       { '<F4>', function()
           dap.disconnect({terminateDebuggee = true})
           end, desc = 'Debug: Stop' },
+      -- Compile code in build-db folder
+      { '<F5>', function ()
+          vim.cmd('! cd build-db && make -j')
+      end, desc = "Compile in debug-db"},
       { '<F9>', dap.step_into, desc = 'Debug: Step Into' },
       { '<F7>', dap.step_over, desc = 'Debug: Step Over' },
       { '<F6>', dap.step_out, desc = 'Debug: Step Out' },
