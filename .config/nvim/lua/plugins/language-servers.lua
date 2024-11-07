@@ -109,6 +109,11 @@ return {
                     --  For example, in C this would take you to the header.
                     map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+
+                    vim.keymap.set({'n', 'i'}, 'C-k', vim.lsp.buf.signature_help, { desc = "Print function signature", 
+                            silent = true})
+
+
                     -- The following two autocommands are used to highlight references of the
                     -- word under your cursor when your cursor rests there for a little while.
                     --    See `:help CursorHold` for information about when this is executed
@@ -209,6 +214,7 @@ return {
                     'cpplint',
                     'json-lsp' ,
                     'markdown-oxide' ,
+                    'markdownlint',
                     'python-lsp-server',
                     'shellcheck',
                     'yaml-language-server',

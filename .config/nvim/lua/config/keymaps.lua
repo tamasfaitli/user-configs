@@ -11,6 +11,8 @@ darkTheme = 'tokyonight-night'
 
 -- # [G]o to places
 vim.keymap.set("n", "<leader>gf", vim.cmd.Ex, {desc="[G]o to [F]ilesystem"})
+-- open nvim config 
+vim.keymap.set('n', '<leader>gvc', '<cmd>e ~/.config/nvim<CR>', {desc="[G]o to [V]im [C]onfig"})
 
 -- after LSP:
 -- go to definition, go to type declaration, go to "included file", 
@@ -20,7 +22,15 @@ vim.keymap.set("n", "<leader>gf", vim.cmd.Ex, {desc="[G]o to [F]ilesystem"})
 -- vim.keymap.set('n', '<leader>')
 vim.keymap.set('n', '<leader>sh', tsbuiltin.help_tags, {desc='[S]earch [H]elp'})
 
+vim.keymap.set('n', '<leader>ss', tsbuiltin.live_grep, {desc='[S]earch [S]ymbol'})
+vim.keymap.set('n', '<leader>sc', function ()
+    local word = vim.fn.expand('<cword>')
+    tsbuiltin.grep_string({search = word})
+end, {desc='[S]earch [C]urrent'})
 
+
+vim.keymap.set("n", "<leader>sr", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+ {desc="[S]earch and [R]eplace"})
 
 
 -- # [F]ind things
@@ -86,3 +96,9 @@ vim.keymap.set('n', '<leader>h4', function() harpoon:list():select(4) end, {desc
 
 vim.keymap.set('n', '<C-Left>', vim.cmd.bprev, {desc='Prev buffer'})
 vim.keymap.set('n', '<C-Right>', vim.cmd.bnext, {desc='Next buffer'})
+
+
+
+
+
+
