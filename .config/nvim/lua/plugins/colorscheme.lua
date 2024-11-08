@@ -19,11 +19,12 @@ return{
                 colors.border_highlight = colors.orange
                 colors.border = colors.orange
                 colors.bg_statusline = require('tokyonight.util').lighten(colors.bg_statusline, 0.8)
-
+                colors.bg_float = require('tokyonight.util').lighten(colors.bg, 0.92)
+                colors.fg_float = colors.orange
             end,
 
             on_highlights = function (highlights, colors)
-                -- highlights.border_highlight.background = colors.orange
+               -- highlights.border_highlight.background = colors.orange
             end,
         }
         )
