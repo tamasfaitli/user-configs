@@ -137,9 +137,41 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    
-    -- Install language specific adapters
-    require('dap-lldb').setup()
-    require('dap-python').setup("python3")
-  end,
-}
+
+      -- Install language specific adapters
+      local lldb_cfg = {
+          configurations = {
+              cpp = {
+                  {
+                      name = "Debug current (Bazel)",
+                      type = "codelldb",
+                      request = "launch",
+                      cwd = "${workspaceFolder}",
+                      program = "${workspaceFolder}/bazel-bin/${relativeFileDirname}/${fileBasenameNoExtension}",
+                      sourceMap = {
+                          ["/proc/self/cwd"] = "${workspaceFolder}"
+                      }
+                  },
+                  {
+                      name = "Debug specify target (Bazel)",
+                      type = "codelldb",
+                      request = "launch",
+                      cwd = "${workspaceFolder}",
+                      program = function()
+                          local target_name = vim.fn.input("Target name: ")
+                          print("Target name: " .. target_name)
+                          local target_path = "${workspaceFolder}/bazel-bin/${relativeFileDirname}/"
+                          return target_path .. target_name
+                      end,
+                      sourceMap = {
+                          ["/proc/self/cwd"] = "${workspaceFolder}"
+                      }
+                  }
+              }
+          }
+      }
+      require('dap-lldb').setup(lldb_cfg)
+      require('dap-python').setup("python3")
+
+      end,
+  }
